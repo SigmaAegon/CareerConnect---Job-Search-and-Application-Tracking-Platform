@@ -1,0 +1,49 @@
+# CareerConnect - Job Search & Application Tracking Platform
+
+## Description
+CareerConnect is a modern web platform designed to help job seekers manage their job search activities efficiently. It acts as a centralized dashboard to track job applications, discover relevant job postings, manage profiles, and keep all job hunt data in one place.
+
+## Target Audience
+Job Seekers, candidates looking to switch careers, students applying for internships, and professionals wanting a structured overview of their application pipeline.
+
+## Features implemented in Prototype
+1. **Landing Page**: Explains the value proposition of CareerConnect with quick paths to login or browse jobs.
+2. **Authentication Flow**: Mocked UI for user registration and login.
+3. **Job Feed**: A searchable catalog of job postings with requirements, salary info, and skills required. Currently populated with static dummy data.
+4. **Job Detail Page**: Expand on a job, view detailed requirements.
+5. **Application Tracker (Kanban)**: A visual board for users to see where their applications stand (Preparing, Applied, Active, Closed).
+6. **Candidate Profile**: A page to manage personal info, skills, and base resumes. Let users upload and manage resumes (mocked UI).
+
+## Technical Architecture Stack 
+- **Frontend**: React and Next.js (App Router) — Provides fast routing and Server Capabilities.
+- **Styling**: Tailwind CSS & shadcn/ui components class-based responsive design system.
+- **Language**: TypeScript for better developer experience and type safety.
+- **Mock Data**: Uses `src/data/dummy.ts` to power the components with static variables mimicking an API dataset.
+- *Future implementation will include Supabase for Auth & Database, and local LLMs (Ollama) for tailoring cover letters and resumes.*
+
+## How to run locally (For developers)
+Since this project is set up as a Next.js prototype with mock data, follow these steps to run it locally on your machine:
+
+1. **Pre-requisites**: Ensure you have Node.js (v18+) and an NPM package manager (`npm`, `pnpm`, `bun`, or `yarn`). `pnpm` is used in this repository.
+2. **Install dependecies**: Open your terminal in the root folder (`CareerConnect---Job-Search-and-Application-Tracking-Platform`) and run:
+   ```bash
+   pnpm install
+   ```
+3. **Run Development Server**: 
+   ```bash
+   pnpm dev
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. You can click on "Explore Jobs", "Create Account" or use the top Navigation bar to navigate through the mocked UI of the platform.
+
+## Current State of Development (Prototype Phase)
+- ✅ Scaffold Next.js project with App Router.
+- ✅ Added TailwindCSS, Lucide Icons, and shadcn/ui library UI parts.
+- ✅ Added Mocked data in TS types.
+- ✅ Created dummy layouts, navbar and cards.
+- ✅ Developed main prototype screens (Landing, Job Feed, App Tracker, Profile, Auth).
+- ❌ Database integration (Supabase) not yet connected.
+- ❌ LLM integrations not yet added.
+- ❌ User authentication state not yet linked to backend provider.
+
+We chose Next.js (App route) + Tailwind UI to get immediate functional interfaces up quickly without worrying about spinning up a separate server (Modular Monolith) enabling scaling out gracefully.

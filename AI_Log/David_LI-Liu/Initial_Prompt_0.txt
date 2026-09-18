@@ -1,0 +1,295 @@
+We are trying to build a web plateform called CareerConnect designed to help job seekers manage their job search activities. The system allows users to create profiles, upload and manage resumes, search for job opportunities,
+track submitted applications, and follow the progress of their application process. The platform aims
+to centralize job-search activities and help users stay organized throughout their career development
+journey. We will aim to run the platform on the web.
+
+The main features are:
+ User registration, authentication, and profile management.
+ Resume upload and management.
+ Job posting management for recruiters.
+ Job search and filtering capabilities.
+ Job application submission.
+ Application status tracking (Applied, Interview, Offered, Rejected).
+ Application history dashboard.
+ Notifications and reminders for application deadlines.
+ Saved jobs and favourites
+
+The architecture we are going to use is going to be a modular monolith:
+Browser
+|
+Next.js application
+|
+Server actions / REST API
+|
+Supabase
+|-- Authentication
+|-- PostgreSQL database
+|-- Resume file storage
+|-- Row-level security
+|
+External services
+|-- Job-listing API
+|-- Optional Gemini API
+|-- Transactional email service
+
+The Front-end requirements are:
+Core stack:
+Language: TypeScript
+Framework: Next.js with React
+Styling: Tailwind CSS
+Components: shadcn/ui or another free accessible component library
+Form handling: React Hook Form
+Validation: Zod
+Server-state management: TanStack Query, or Next.js server actions for a smaller project
+Icons: Lucide
+Testing: Vitest and React Testing Library
+End-to-end testing: Playwright
+Package manager: npm, pnpm or Bun
+
+Required pages:
+Landing page
+Registration and sign-in
+Onboarding
+Candidate profile
+Resume upload and editing
+Job feed
+Job search and filters
+Individual job details
+Saved and dismissed jobs
+Application creation
+Application tracker
+Application details and timeline
+Account and privacy settings
+Administrator import/monitoring page
+
+Reusable components:
+Navigation bar and mobile menu
+Job card
+Swipe or apply/save/dismiss controls
+Search and filter panel
+Resume uploader
+Profile completion indicator
+Application status board
+Status badge
+Document preview
+Confirmation dialog
+Toast notifications
+Loading skeletons
+Error states
+Empty states
+Pagination or infinite scrolling
+
+User-experience requirements:
+Responsive mobile and desktop layouts
+Keyboard-accessible navigation
+Proper labels and focus indicators
+Screen-reader-compatible controls
+Clear validation messages
+Confirmation before destructive actions
+Protection against duplicate applications
+Autosaving forms
+Loading and progress indicators
+Graceful handling of unavailable APIs
+English first, with architecture ready for French localization because the project may serve
+Montréal or Quebec users
+
+Back-end requirements
+Next.js server actions and route handlers as the initial backend. Do not build a separate
+Express or Python server until a feature genuinely requires it.
+Use:
+TypeScript and Node.js
+Supabase PostgreSQL
+Supabase Authentication
+Supabase Storage
+Drizzle ORM, Prisma, or the Supabase JavaScript client
+Zod for server-side request validation
+Scheduled functions only for job imports and reminders
+Python later for advanced resume parsing or ranking experiments
+
+Database tables:
+Table -Purpose
+users -Authentication identity
+profiles -Candidate name, location, experience and preferences
+skills -Normalized skill definitions
+profile_skills -Candidate-to-skill relationships
+resumes -Resume metadata and storage path
+resume_versions -Original and tailored resume versions
+companies -Employer information
+jobs -Imported vacancies
+job_skills -Skills required by each vacancy
+job_interactions -Viewed, saved, liked or dismissed
+applications -Candidate’s application record
+application_events -Status-change timeline
+cover_letters -Generated or manually written letters
+notifications -In-app alerts and reminder records
+search_preferences -Roles, locations, salary and work arrangement
+ai_generations -AI request type, status and generated-document reference
+audit_logs -Security-sensitive operations
+api_import_runs -Job-import results and errors
+
+Application status model
+Use a controlled set such as:
+Draft
+Ready to apply
+Applied
+Recruiter screening
+Interview
+Assessment
+Offer
+Rejected
+Withdrawn
+Archived
+Store status changes separately in application_events; do not overwrite all history when an
+application moves to a new stage.
+
+Back-end services:
+Account creation and session management
+Profile CRUD operations
+Resume upload, validation and deletion
+Resume text extraction
+Job ingestion and deduplication
+Search and filtering
+Saved/dismissed job management
+Application CRUD operations
+Status-transition validation
+Application timeline creation
+Notification scheduling
+AI document generation
+Rate limiting
+Audit logging
+Account data export
+Account and file deletion
+
+Server requirements
+table(
+Layer -Free option -Responsibility
+Source control -GitHub -Repository, issues and pull requests
+Front end/server endpoints -Vercel Hobby -Next.js deployment and preview builds
+Database -Supabase -Free PostgreSQL
+Authentication -Supabase Auth -Email/password, magic link or OAuth
+Resume storage -Supabase Storage -PDF and DOCX files
+Scheduled jobs -GitHub Actions, Supabase scheduled functions or cron -Periodic job imports and reminders
+Monitoring -Vercel logs and Sentry free tier -Runtime errors
+Analytics -PostHog free tier or privacy-friendly basic analytics -Feature usage
+Email -Resend free tier or Supabase email for development -Verification and notifications
+AI -Gemini free tier or local Ollama during development -Resume and cover-letter generation
+Domain -Free platform subdomain -Avoid purchasing a custom domain initially
+)
+
+Internal API:
+POST /api/profile
+GET /api/profile
+PATCH /api/profile
+POST /api/resumes
+GET /api/resumes
+DELETE /api/resumes/:id
+GET /api/jobs
+GET /api/jobs/:id
+POST /api/jobs/:id/save
+POST /api/jobs/:id/dismiss
+GET /api/applications
+POST /api/applications
+GET /api/applications/:id
+PATCH /api/applications/:id/status
+POST /api/ai/tailor-resume
+POST /api/ai/cover-letter
+GET /api/notifications
+PATCH /api/notifications/:id/read
+
+Every endpoint should implement:
+Authentication
+Authorization and ownership checks
+Input validation
+Rate limiting
+Consistent errors
+Pagination
+Logging without exposing resumes or tokens
+Protection against duplicate records
+Database transactions where multiple records change together
+Need Initial approach
+Job listings Use a developer job API, open company feeds, or a small administrator-imported dataset
+AI generation Gemini free tier or a locally hosted Ollama model
+Resume extraction Server-side PDF/DOCX parsing libraries
+
+External APIs:
+Need -Initial approach
+Job listings -Use a developer job API, open company feeds, or a small administrator-imported dataset
+AI generation -Gemini free tier or a locally hosted Ollama model
+Resume extraction -Server-side PDF/DOCX parsing libraries
+Email notifications -Resend or another transactional email provider
+Google -sign-in Supabase OAuth
+Gmail tracking -Postpone until after the 5 features
+Employer-form automation -Postpone until after the 5 features
+Location autocomplete -Use a static location list or OpenStreetMap-compatible service carefully
+Analytics -PostHog or simple internal event records
+
+Security requirements:
+HTTPS everywhere
+Secure, HTTP-only session cookies
+Row-level security on every user-owned table
+Private resume-storage bucket
+Short-lived signed file URLs
+Server-side authorization on every mutation
+File extension, MIME type and size validation
+Malware-scanning placeholder or administrator quarantine workflow
+API rate limiting
+CSRF protection where applicable
+Protection against SQL injection through parameterized queries
+Output encoding against cross-site scripting
+Secrets stored only in server environment variables
+No service-role database key in browser code
+AI prompts protected against instruction injection from job descriptions
+Minimal logging of personally identifiable information
+Account deletion and data export
+Consent before sending documents to an AI provider
+Privacy policy and retention rules
+Regular dependency updates
+Database backups before public launch
+Separate development and production environments
+
+Auto-apply warning
+Navigate many unrelated career sites
+Recognize fields and document-upload controls
+Handle Workday, Greenhouse, Lever and other ATS variations
+Answer employer questions safely
+Manage redirects and pop-ups
+Handle CAPTCHA and multifactor verification without bypassing them
+Preserve user approval and consent
+Detect failed or incomplete submissions
+Avoid duplicate applications
+Save evidence of what was submitted
+Adapt whenever employer sites change
+Respect platform terms and rate limits
+
+five features needed to be implemented:
+Candidate onboarding
+-Implement registration, authentication, candidate profile creation and one resume upload.
+Extract basic resume text to prefill experience, education and skills.
+Job feed and search
+-Import jobs from one legitimate source and support keyword, location, remote/hybrid/on-site
+and employment-type filters.
+Save, dismiss and swipe
+Let users save, dismiss or express interest in jobs, with duplicate prevention. The interaction
+can look like SORCE and Sprout without immediately triggering an external application
+Application tracker
+-Allow users to create an application manually, assign a status and see it in a Kanban board or
+timeline. Store every status change in application history.
+Tailored application package
+Generate a suggested resume summary and cover letter for a selected job. Require the user to
+review and edit the result, then download the documents and continue to the employer’s
+website.
+
+Build sequence
+1. Create the Next.js interface and Supabase project.
+2. Implement authentication and database security policies.
+3. Build profile and resume management.
+4. Import a limited set of jobs.
+5. Add job search, save and dismiss actions.
+6. Build the application tracker and timeline.
+7. Add AI-assisted document generation behind strict usage limits.
+8. Add tests, logging, privacy controls and account deletion.
+9. Deploy through GitHub and Vercel.
+10. Only after the 5 features works, consider email synchronization, notifications and controlled
+browser automation.
+
+Build all the directory and start writting a prototype of the project (at least the front end, so that it can run locally with dummy variables). After doing your part, I need you to tell me where you have reached in the developpement stack, what is working as well as what is not working and what needs to be done for the project to fully work. I also need you to tell me how everything works as if I was an beginner software engineering and why you choose to do the following action. Do not delete any existing files and add a wiki.txt file that will be used for the gihub repository to describe how the app works, who should use it and how to use it

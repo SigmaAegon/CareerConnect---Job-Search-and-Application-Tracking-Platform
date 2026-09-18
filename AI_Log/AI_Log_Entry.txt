@@ -1,0 +1,27 @@
+Required Log Entry Format
+For every AI-assisted activity, include the following information:
+Task ID/Title: A short description of the task.
+Purpose of AI Use: Why AI was used (e.g., brainstorming, requirements analysis, coding, debugging,
+testing, documentation, review).
+Chat Link or Prompt/Response: Link to the conversation or the full prompt and AI response.
+AI-Suggested Content: Summary of what the AI proposed or generated.
+Validation: How the output was verified (e.g., manual review, testing, peer review, static analysis,
+CI/CD checks, comparison with requirements).
+Decision: Indicate whether the AI output was:
+ Accepted
+ Modified before use
+ Rejected
+Reflection: Briefly describe what was learned from the interaction and whether the AI assistance was
+useful.
+Responsible Person: Team member who conducted the interaction and completed the task.
+
+
+Task 1.1: Overall reasearch on the architechture
+Purpose of AI Use: brainstorming and requirements analysis
+Chat Link or Prompt/Response: In David_LI-LIu folder called What other feature does SORCE and Sprout have othe.pdf
+AI-Suggested Content: It it suggested we use Typescript or javascript with the next.js and react framwork for the front end. we should also use Python, PostgreSQL for the database and Vercel for the hosting
+Validation: We will be writting the first code and then we will know
+Decision: 
+ Accepted for now
+Reflection: We still need to write the code to understand more how this works
+Responsible Person: David Li-Liu
